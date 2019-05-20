@@ -2,6 +2,7 @@ package org.bugtracking.projects;
 
 import java.lang.String;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.bugtracking.tasks.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.bugtracking.tasks.Task;
 
 
 @RestController
@@ -19,6 +21,8 @@ public class ProjectController {
 
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private TaskRepository taskRepository;
 
     //Create
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -39,6 +43,30 @@ public class ProjectController {
             ProjectDTO projectDTO = new ProjectDTO(project);
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.writeValueAsString(projectDTO);
+        } else {
+            throw new ProjectNotFoundException();
+        }
+    }
+
+    //Add task to project
+    @RequestMapping(value = "/projects/{projectid}/addTask/{taskid}", method = RequestMethod.PATCH)
+    public @ResponseBody String addTaskToProject(@PathVariable("projectid") int projectid, @PathVariable("taskid") int taskid) throws  Exception {
+        System.out.println(projectid);
+        System.out.println(taskid);
+        if (projectRepository.existsById(projectid)) {
+            if (taskRepository.existsById(taskid)) {
+                Project project = projectRepository.findById(projectid).get();
+
+                Task task = taskRepository.findById(taskid).get();
+
+                project.addTask(task);
+
+                ProjectDTO projectDTO = new ProjectDTO(project);
+                ObjectMapper objectMapper = new ObjectMapper();
+                return objectMapper.writeValueAsString(projectDTO);
+            } else {
+                throw new TaskNotFoundException();
+            }
         } else {
             throw new ProjectNotFoundException();
         }
@@ -96,6 +124,11 @@ public class ProjectController {
 
     @ResponseStatus(value=HttpStatus.NOT_MODIFIED, reason="Project not modified")  // 304
     private class ProjectNotChangedException extends RuntimeException {
+        // ...
+    }
+
+    @ResponseStatus(value=HttpStatus.NOT_FOUND, reason="Project not found")  // 404
+    private class TaskNotFoundException extends RuntimeException {
         // ...
     }
 }

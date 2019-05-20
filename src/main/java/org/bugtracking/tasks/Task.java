@@ -1,5 +1,6 @@
 package org.bugtracking.tasks;
 
+
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +9,10 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Id;
 import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.JoinColumn;
+import org.bugtracking.projects.Project;
+import javax.persistence.FetchType;
 
 @Entity
 public class Task {
@@ -18,11 +23,14 @@ public class Task {
     @Column(nullable=false)
     private String name;
     private String description;
-    private String link;
     private Integer priority;
     private Date dateOfCreation;
     private Date dateOfLastChange;
     private Status status;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="PROJECT_ID")
+    private Project project;
 
     @PrePersist
     protected void onCreate() {
@@ -50,9 +58,14 @@ public class Task {
 
     public void setPriority(Integer priority) { this.priority = priority; };
 
-    public void setLink(String link) { this.link = link; };
-
     public void setStatus(Status status) { this.status = status; };
+
+    public void setProject(Project project) {
+        this.project = project;
+        if (!project.getTasks().contains(this)) {
+            project.getTasks().add(this);
+        }
+    }
 
     //Getters
 
@@ -66,8 +79,6 @@ public class Task {
         return this.description;
     };
 
-    public String getLink() { return this.link; };
-
     public Integer getPriority() { return this.priority; };
 
     public Date getDateOfCreation() {
@@ -79,6 +90,8 @@ public class Task {
     };
 
     public Status getStatus() { return this.status; };
+
+    public Project getProject() { return this.project; };
 
     //Methods
 
@@ -97,14 +110,6 @@ public class Task {
         if (task.getDescription() != null) {
             if (!task.getDescription().equals(this.getDescription())) {
                 this.setDescription(task.getDescription());
-                wasChanged = true;
-            }
-        }
-
-        //Update Link
-        if (task.getLink() != null) {
-            if (!task.getLink().equals(this.getLink())) {
-                this.setLink(task.getLink());
                 wasChanged = true;
             }
         }

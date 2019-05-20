@@ -1,5 +1,11 @@
 package org.bugtracking.tasks;
 
+import org.bugtracking.projects.Project;
+import org.bugtracking.projects.ProjectRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManager;
+
+import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,29 +16,29 @@ public class TaskDTO {
     private Integer id;
     private String name;
     private String description;
-    private String link;
     private Integer priority;
     private Date dateOfCreation;
     private Date dateOfLastChange;
     private Task.Status status;
+    private Project project;
 
     public TaskDTO(Task task) {
         this.id = task.getId();
         this.name = task.getName();
         this.description = task.getDescription();
-        this.link = task.getLink();
         this.priority = task.getPriority();
         this.dateOfCreation = task.getDateOfCreation();
         this.dateOfLastChange = task.getDateOfLastChange();
         this.status = task.getStatus();
+        this.project = task.getProject();
     }
 
     public Integer getId() { return this.id; };
     public String getName() { return this.name; };
     public String getDescription() { return this.description; };
-    public String getLink() { return this.link; };
     public Integer getPriority() { return this.priority; };
     public Date getDateOfCreation() { return this.dateOfCreation; };
     public Date getDateOfLastChange() { return this.dateOfLastChange; };
     public Task.Status getStatus() { return this.status; };
+    public Project getProject() { return this.project; };
 }
