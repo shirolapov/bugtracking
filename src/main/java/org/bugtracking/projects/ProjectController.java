@@ -1,4 +1,4 @@
-package org.bugtracking;
+package org.bugtracking.projects;
 
 import java.lang.String;
 import com.fasterxml.jackson.databind.ObjectMapper;

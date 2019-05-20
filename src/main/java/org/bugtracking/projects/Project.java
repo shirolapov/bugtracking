@@ -1,4 +1,4 @@
-package org.bugtracking;
+package org.bugtracking.projects;
 
 import java.util.Date;
 import javax.persistence.Entity;
@@ -21,16 +21,6 @@ public class Project {
     private Date dateOfCreation;
     private Date dateOfLastChange;
 
-    //Setters
-
-    public void setName(String newName) {
-        this.name = newName;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     @PrePersist
     protected void onCreate() {
         dateOfCreation = new Date();
@@ -40,6 +30,16 @@ public class Project {
     @PreUpdate
     protected void onUpdate() {
         dateOfLastChange = new Date();
+    }
+
+    //Setters
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     //Getters
