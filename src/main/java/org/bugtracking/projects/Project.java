@@ -61,4 +61,32 @@ public class Project {
     }
 
     public Integer getId() { return this.id; }
+
+    //Methods
+
+    public Boolean equalsAndChange(Project project) {
+        Boolean wasChanged = false;
+
+        //Update Name
+        if (project.getName() != null) {
+            if (!project.getName().equals(this.getName())) {
+                this.setName(project.getName());
+                wasChanged = true;
+            }
+        }
+
+        //Update Description
+        if (project.getDescription() != null) {
+            if (!project.getDescription().equals(this.getDescription())) {
+                this.setDescription(project.getDescription());
+                wasChanged = true;
+            }
+        }
+
+        if (wasChanged) {
+            this.dateOfLastChange = new Date();
+        }
+
+        return wasChanged;
+    }
 }

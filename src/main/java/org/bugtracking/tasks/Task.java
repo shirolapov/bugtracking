@@ -1,7 +1,13 @@
 package org.bugtracking.tasks;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Id;
+import javax.persistence.Column;
 
 @Entity
 public class Task {
@@ -27,38 +33,38 @@ public class Task {
 
     @PreUpdate
     protected void onUpdate() {
-        dateOfLastChange = new Date();
+        this.dateOfLastChange = new Date();
     }
 
-    enum Status {
+    public enum Status {
         NEW,
         INPROGRESS,
         CLOSE
     }
 
-    public void setName(String newName) {
-        this.name = newName;
-    }
+    //Setters
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public void setName(String newName) { this.name = newName; };
 
-    private class TaskBlockException extends RuntimeException {
-        public String toString() {
-            return "Task is blocked.";
-        }
-    }
+    public void setDescription(String description) { this.description = description; };
+
+    public void setPriority(Integer priority) { this.priority = priority; };
+
+    public void setLink(String link) { this.link = link; };
+
+    public void setStatus(Status status) { this.status = status; };
+
+    //Getters
 
     public Integer getId() { return this.id; };
 
     public String getName() {
         return this.name;
-    }
+    };
 
     public String getDescription() {
         return this.description;
-    }
+    };
 
     public String getLink() { return this.link; };
 
@@ -66,27 +72,71 @@ public class Task {
 
     public Date getDateOfCreation() {
         return this.dateOfCreation;
-    }
+    };
 
     public Date getDateOfLastChange() {
         return this.dateOfLastChange;
-    }
+    };
 
     public Status getStatus() { return this.status; };
 
-    public Boolean equalsAndChangeTask(Task task) {
-        if (!task.getName().equals(this.getName())) {
-            return true;
-        } else if (!task.getDescription().equals(this.getDescription())) {
-            return true;
-        } else if (!task.getLink().equals(this.getLink())) {
-            return true;
-        } else if (!task.getPriority().equals(this.getPriority())) {
-            return true;
-        } else if (!task.getStatus().equals(this.getStatus())) {
-            return true;
-        } else {
-            return false;
+    //Methods
+
+    public Boolean equalsAndChange(Task task) {
+        Boolean wasChanged = false;
+
+        //Update Name
+        if (task.getName() != null) {
+            if (!task.getName().equals(this.getName())) {
+                this.setName(task.getName());
+                wasChanged = true;
+            }
+        }
+
+        //Update Description
+        if (task.getDescription() != null) {
+            if (!task.getDescription().equals(this.getDescription())) {
+                this.setDescription(task.getDescription());
+                wasChanged = true;
+            }
+        }
+
+        //Update Link
+        if (task.getLink() != null) {
+            if (!task.getLink().equals(this.getLink())) {
+                this.setLink(task.getLink());
+                wasChanged = true;
+            }
+        }
+
+        //Update Priority
+        if (task.getPriority() != null) {
+            if (!task.getPriority().equals(this.getPriority())) {
+                this.setPriority(task.getPriority());
+                wasChanged = true;
+            }
+        }
+
+        //Update Status
+        if (task.getStatus() != null) {
+            if (!task.getStatus().equals(this.getStatus())) {
+                this.setStatus(task.getStatus());
+                wasChanged = true;
+            }
+        }
+
+        if (wasChanged) {
+            this.dateOfLastChange = new Date();
+        }
+
+        return wasChanged;
+    }
+
+    //Custom exceptions
+
+    private class TaskBlockException extends RuntimeException {
+        public String toString() {
+            return "Task is blocked.";
         }
     }
 }

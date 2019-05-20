@@ -26,6 +26,7 @@ public class TaskController {
     @RequestMapping(value = "/tasks", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String task(@RequestBody Task task) throws Exception {
         if (task.getName() == null) throw new NameNotFoundException();
+        if (task.getPriority() == null) { task.setPriority(0); }
         if (task.getPriority() < 0) throw new StatusNotPositiveNumber();
         taskRepository.save(task);
         TaskDTO taskDTO = new TaskDTO(task);
@@ -53,19 +54,39 @@ public class TaskController {
 
             Task task = taskRepository.findById(id).get();
 
-            if (!task.equalsTask(taskRequest)) {
-                throw new ProjectNotChangedException();
-            } else {
-                taskRepository.save(taskRequest);
+            if (task.equalsAndChange(taskRequest)) {
+                taskRepository.save(task);
                 TaskDTO taskDTO = new TaskDTO(task);
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.writeValueAsString(taskDTO);
+            } else {
+                throw new ProjectNotChangedException();
             }
         } else {
             throw new TaskNotFoundException();
         }
     }
 
+    //Delete
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RequestMapping(value = "/taskss/{id}", method = RequestMethod.DELETE)
+    public @ResponseBody String deleteTask(@PathVariable("id") int id) {
+        if (taskRepository.existsById(id)) {
+            Task task = taskRepository.findById(id).get();
+            taskRepository.delete(task);
+            return null;
+        } else {
+            throw new TaskNotFoundException();
+        }
+    }
+
+    //FindAll
+    @RequestMapping(path="/tasks", method = RequestMethod.GET)
+    private  @ResponseBody Iterable<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
+    //Custom exception
     @ResponseStatus(value=HttpStatus.UNPROCESSABLE_ENTITY, reason="No such name")  // 422
     private class NameNotFoundException extends RuntimeException {
         // ...
