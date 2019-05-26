@@ -53,6 +53,10 @@ public class TaskController {
 
             Task task = taskRepository.findById(id).get();
 
+            if (!task.allowUpdate()) {
+                throw new TaskIsClosedException();
+            }
+
             if (task.equalsAndChange(taskRequest)) {
                 taskRepository.save(task);
                 TaskDTO taskDTO = new TaskDTO(task);
@@ -103,6 +107,11 @@ public class TaskController {
 
     @ResponseStatus(value=HttpStatus.NOT_MODIFIED, reason="Project not modified")  // 304
     private class ProjectNotChangedException extends RuntimeException {
+        // ...
+    }
+
+    @ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "Ticket is closed" ) //403
+    private class TaskIsClosedException extends RuntimeException {
         // ...
     }
 }

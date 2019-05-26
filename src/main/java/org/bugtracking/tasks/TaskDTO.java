@@ -13,7 +13,7 @@ import javax.persistence.Id;
 import java.util.Date;
 
 public class TaskDTO {
-    private Integer id;
+    private Long id;
     private String name;
     private String description;
     private Integer priority;
@@ -33,7 +33,7 @@ public class TaskDTO {
         this.project = task.getProject();
     }
 
-    public Integer getId() { return this.id; };
+    public Long getId() { return this.id; };
     public String getName() { return this.name; };
     public String getDescription() { return this.description; };
     public Integer getPriority() { return this.priority; };

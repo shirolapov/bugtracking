@@ -9,9 +9,7 @@ import org.bugtracking.projects.Project;
 @Entity
 public class Task {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
+    @Id @GeneratedValue long id;
     @Column(nullable=false)
     private String name;
     private String description;
@@ -52,13 +50,13 @@ public class Task {
 
     public void setStatus(Status status) { this.status = status; };
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProject(Project projectReq) {
+        project = projectReq;
     }
 
     //Getters
 
-    public Integer getId() { return this.id; };
+    public Long getId() { return this.id; };
 
     public String getName() {
         return this.name;
@@ -81,6 +79,13 @@ public class Task {
     public Status getStatus() { return this.status; };
 
     public Project getProject() { return this.project; };
+
+    public Boolean allowUpdate() {
+        if (status == Status.CLOSE) {
+            return false;
+        }
+        return true;
+    }
 
     //Methods
 

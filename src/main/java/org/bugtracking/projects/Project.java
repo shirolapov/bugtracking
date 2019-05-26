@@ -9,9 +9,7 @@ import java.util.List;
 @Entity
 public class Project {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Integer id;
+    @Id @GeneratedValue long id;
     @Column(nullable=false)
     private String name;
     private String description;
@@ -67,11 +65,7 @@ public class Project {
         return this.dateOfLastChange;
     }
 
-    public Integer getId() { return this.id; }
-
-    public void addTask(Task task) {
-        this.tasks.add(task);
-    }
+    public Long getId() { return this.id; }
 
     //Methods
 

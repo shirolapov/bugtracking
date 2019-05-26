@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public class ProjectDTO {
-    private Integer id;
+    private Long id;
     private String name;
     private String description;
     private Date dateOfCreation;
@@ -23,7 +23,7 @@ public class ProjectDTO {
         this.tasks = project.getTasks();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
