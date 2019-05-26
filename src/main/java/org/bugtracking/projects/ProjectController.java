@@ -1,7 +1,10 @@
 package org.bugtracking.projects;
 
+import java.lang.reflect.Array;
+import java.util.List;
 import java.lang.String;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.bugtracking.tasks.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +16,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.bugtracking.tasks.Task;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.xml.crypto.Data;
+import org.bugtracking.tasks.Task;
 
 @RestController
 public class ProjectController {
@@ -48,25 +54,29 @@ public class ProjectController {
         }
     }
 
-    //Add task to project
-    @RequestMapping(value = "/projects/{projectid}/addTask/{taskid}", method = RequestMethod.PATCH)
-    public @ResponseBody String addTaskToProject(@PathVariable("projectid") int projectid, @PathVariable("taskid") int taskid) throws  Exception {
-        System.out.println(projectid);
-        System.out.println(taskid);
-        if (projectRepository.existsById(projectid)) {
-            if (taskRepository.existsById(taskid)) {
-                Project project = projectRepository.findById(projectid).get();
+    //Add many task to project
+    @RequestMapping(value = "/projects/{id}/relationships/tasks", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody String addTasksToProject(@PathVariable("id") int id, @RequestBody String jsonString) throws Exception {
+        if (projectRepository.existsById(id)) {
+            Project project = projectRepository.findById(id).get();
 
-                Task task = taskRepository.findById(taskid).get();
+            Gson gson = new Gson();
+            DataTask dataTask = new DataTask();
 
-                project.addTask(task);
+            dataTask = gson.fromJson(jsonString, DataTask.class);
 
-                ProjectDTO projectDTO = new ProjectDTO(project);
-                ObjectMapper objectMapper = new ObjectMapper();
-                return objectMapper.writeValueAsString(projectDTO);
-            } else {
-                throw new TaskNotFoundException();
+            for (int i = 0; i < dataTask.data.size(); i++) {
+                Integer taskId = dataTask.data.get(i).id;
+                if (taskRepository.existsById(taskId)) {
+                    Task task = taskRepository.findById(taskId).get();
+                    task.setProject(project);
+                    taskRepository.save(task);
+                }
             }
+
+            ProjectDTO projectDTO = new ProjectDTO(project);
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(projectDTO);
         } else {
             throw new ProjectNotFoundException();
         }

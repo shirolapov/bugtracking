@@ -1,6 +1,10 @@
 package org.bugtracking.projects;
 
+import org.bugtracking.tasks.Task;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ProjectDTO {
     private Integer id;
@@ -8,6 +12,7 @@ public class ProjectDTO {
     private String description;
     private Date dateOfCreation;
     private Date dateOfLastChange;
+    private List<Task> tasks;
 
     public ProjectDTO(Project project) {
         this.id = project.getId();
@@ -15,6 +20,7 @@ public class ProjectDTO {
         this.description = project.getDescription();
         this.dateOfCreation = project.getDateOfCreation();
         this.dateOfLastChange = project.getDateOfLastChange();
+        this.tasks = project.getTasks();
     }
 
     public Integer getId() {
@@ -36,4 +42,6 @@ public class ProjectDTO {
     public Date getDateOfLastChange() {
         return dateOfLastChange;
     }
+
+    public List<Task> getTasks() { return this.tasks; };
 }

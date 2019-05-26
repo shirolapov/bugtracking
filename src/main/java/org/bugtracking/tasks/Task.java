@@ -2,17 +2,9 @@ package org.bugtracking.tasks;
 
 
 import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
+
 import org.bugtracking.projects.Project;
-import javax.persistence.FetchType;
 
 @Entity
 public class Task {
@@ -28,8 +20,8 @@ public class Task {
     private Date dateOfLastChange;
     private Status status;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="PROJECT_ID")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "project_id", nullable = true)
     private Project project;
 
     @PrePersist
@@ -62,9 +54,6 @@ public class Task {
 
     public void setProject(Project project) {
         this.project = project;
-        if (!project.getTasks().contains(this)) {
-            project.getTasks().add(this);
-        }
     }
 
     //Getters

@@ -68,7 +68,7 @@ public class TaskController {
 
     //Delete
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    @RequestMapping(value = "/taskss/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/tasks/{id}", method = RequestMethod.DELETE)
     public @ResponseBody String deleteTask(@PathVariable("id") int id) {
         if (taskRepository.existsById(id)) {
             Task task = taskRepository.findById(id).get();
