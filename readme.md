@@ -23,6 +23,12 @@ curl -v -H "Content-Type: application/json" -X PATCH -d '{"status": "INPROGRESS"
 curl -v -X DELETE 127.0.0.1:8080/tasks/1
 ```
 
+##  Get all
+
+```
+curl -v 127.0.0.1:8080/tasks
+```
+
 
 # Projects
 
@@ -47,4 +53,10 @@ curl -v -H "Content-Type: application/json" -X PATCH -d '{"name": "New name for 
 ## Delete
 ```
 curl -v -X DELETE 127.0.0.1:8080/projects/1
+```
+
+##  Get all
+
+```
+curl -v 127.0.0.1:8080/projects
 ```
