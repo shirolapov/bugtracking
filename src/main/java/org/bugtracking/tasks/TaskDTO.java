@@ -13,14 +13,13 @@ import javax.persistence.Id;
 import java.util.Date;
 
 public class TaskDTO {
-    private Long id;
+    private Integer id;
     private String name;
     private String description;
     private Integer priority;
     private Date dateOfCreation;
     private Date dateOfLastChange;
     private Task.Status status;
-    private Project project;
 
     public TaskDTO(Task task) {
         this.id = task.getId();
@@ -30,15 +29,13 @@ public class TaskDTO {
         this.dateOfCreation = task.getDateOfCreation();
         this.dateOfLastChange = task.getDateOfLastChange();
         this.status = task.getStatus();
-        this.project = task.getProject();
     }
 
-    public Long getId() { return this.id; };
+    public Integer getId() { return this.id; };
     public String getName() { return this.name; };
     public String getDescription() { return this.description; };
     public Integer getPriority() { return this.priority; };
     public Date getDateOfCreation() { return this.dateOfCreation; };
     public Date getDateOfLastChange() { return this.dateOfLastChange; };
     public Task.Status getStatus() { return this.status; };
-    public Project getProject() { return this.project; };
 }

@@ -9,7 +9,7 @@ import org.bugtracking.projects.Project;
 @Entity
 public class Task {
 
-    @Id @GeneratedValue long id;
+    @Id @GeneratedValue Integer id;
     @Column(nullable=false)
     private String name;
     private String description;
@@ -17,10 +17,6 @@ public class Task {
     private Date dateOfCreation;
     private Date dateOfLastChange;
     private Status status;
-
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "project_id", nullable = true)
-    private Project project;
 
     @PrePersist
     protected void onCreate() {
@@ -50,13 +46,9 @@ public class Task {
 
     public void setStatus(Status status) { this.status = status; };
 
-    public void setProject(Project projectReq) {
-        project = projectReq;
-    }
-
     //Getters
 
-    public Long getId() { return this.id; };
+    public Integer getId() { return this.id; };
 
     public String getName() {
         return this.name;
@@ -77,15 +69,6 @@ public class Task {
     };
 
     public Status getStatus() { return this.status; };
-
-    public Project getProject() { return this.project; };
-
-    public Boolean allowUpdate() {
-        if (status == Status.CLOSE) {
-            return false;
-        }
-        return true;
-    }
 
     //Methods
 
@@ -129,6 +112,13 @@ public class Task {
         }
 
         return wasChanged;
+    }
+
+    public Boolean allowUpdate() {
+        if (status == Status.CLOSE) {
+            return false;
+        }
+        return true;
     }
 
     //Custom exceptions

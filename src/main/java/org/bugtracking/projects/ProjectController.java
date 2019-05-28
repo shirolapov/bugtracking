@@ -54,34 +54,6 @@ public class ProjectController {
         }
     }
 
-    //Add many task to project
-    @RequestMapping(value = "/projects/{id}/relationships/tasks", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody String addTasksToProject(@PathVariable("id") int id, @RequestBody String jsonString) throws Exception {
-        if (projectRepository.existsById(id)) {
-            Project project = projectRepository.findById(id).get();
-
-            Gson gson = new Gson();
-            DataTask dataTask = new DataTask();
-
-            dataTask = gson.fromJson(jsonString, DataTask.class);
-
-            for (int i = 0; i < dataTask.data.size(); i++) {
-                Integer taskId = dataTask.data.get(i).id;
-                if (taskRepository.existsById(taskId)) {
-                    Task task = taskRepository.findById(taskId).get();
-                    task.setProject(project);
-                    taskRepository.save(task);
-                }
-            }
-
-            ProjectDTO projectDTO = new ProjectDTO(project);
-            ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.writeValueAsString(projectDTO);
-        } else {
-            throw new ProjectNotFoundException();
-        }
-    }
-
     //Update
     @RequestMapping(value = "/projects/{id}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody String updateProject(@PathVariable("id") int id, @RequestBody Project projectRequest) throws  Exception {

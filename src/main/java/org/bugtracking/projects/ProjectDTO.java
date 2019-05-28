@@ -7,12 +7,11 @@ import java.util.Date;
 import java.util.List;
 
 public class ProjectDTO {
-    private Long id;
+    private Integer id;
     private String name;
     private String description;
     private Date dateOfCreation;
     private Date dateOfLastChange;
-    private List<Task> tasks;
 
     public ProjectDTO(Project project) {
         this.id = project.getId();
@@ -20,10 +19,9 @@ public class ProjectDTO {
         this.description = project.getDescription();
         this.dateOfCreation = project.getDateOfCreation();
         this.dateOfLastChange = project.getDateOfLastChange();
-        this.tasks = project.getTasks();
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -42,6 +40,4 @@ public class ProjectDTO {
     public Date getDateOfLastChange() {
         return dateOfLastChange;
     }
-
-    public List<Task> getTasks() { return this.tasks; };
 }

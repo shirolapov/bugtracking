@@ -1,21 +1,50 @@
-# Task
+# Tasks
 
 ## Create
 
 ```
-curl -v -H "Content-Type: application/json" -X POST -d '{"name": "New task"}' 127.0.0.1:8080/tasks
+curl -v -H "Content-Type: application/json" -X POST -d '{"name": "New task", "priority": "5", "description":"Very good task"}' 127.0.0.1:8080/tasks
 ```
 
-# Project
+## Read
+
+```
+curl -v -H "Content-Type: application/json" 127.0.0.1:8080/tasks/1
+```
+
+## Update
+```
+curl -v -H "Content-Type: application/json" -X PATCH -d '{"status": "INPROGRESS"}' 127.0.0.1:8080/tasks/1
+```
+
+## Delete
+
+```
+curl -v -X DELETE 127.0.0.1:8080/tasks/1
+```
+
+
+# Projects
 
 ## Create
 
 ```
-curl -v -H "Content-Type: application/json" -X POST -d '{"name": "New project"}' 127.0.0.1:8080/projects
+curl -v -H "Content-Type: application/json" -X POST -d '{"name": "New project", "description":"Just another project"}' 127.0.0.1:8080/projects
 ```
 
-## Add task
+## Read
 
 ```
-curl -v -H "Content-Type: application/json" -X PATCH -d '{"data": [ {"type": "task", "id":1} ] }' 127.0.0.1:8080/projects/2/relationships/tasks | jq
+curl -v -H "Content-Type: application/json" 127.0.0.1:8080/projects/1
+```
+
+## Update
+
+```
+curl -v -H "Content-Type: application/json" -X PATCH -d '{"name": "New name for this project"}' 127.0.0.1:8080/projects/1
+```
+
+## Delete
+```
+curl -v -X DELETE 127.0.0.1:8080/projects/1
 ```

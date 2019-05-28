@@ -1,23 +1,17 @@
 package org.bugtracking.projects;
 
-import org.bugtracking.tasks.Task;
-
 import java.util.Date;
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Project {
 
-    @Id @GeneratedValue long id;
+    @Id @GeneratedValue Integer id;
     @Column(nullable=false)
     private String name;
     private String description;
     private Date dateOfCreation;
     private Date dateOfLastChange;
-
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
-    private List<Task> tasks;
 
     @PrePersist
     protected void onCreate() {
@@ -40,14 +34,7 @@ public class Project {
         this.description = description;
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
     //Getters
-    public List<Task> getTasks() {
-        return tasks;
-    }
 
     public String getName() {
         return this.name;
@@ -65,7 +52,7 @@ public class Project {
         return this.dateOfLastChange;
     }
 
-    public Long getId() { return this.id; }
+    public Integer getId() { return this.id; }
 
     //Methods
 
